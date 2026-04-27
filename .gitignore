@@ -1,0 +1,49 @@
+# Arquivos do Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# Propriedades locais (caminhos específicos da sua máquina)
+local.properties
+
+# Configurações do Android Studio / IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+.idea/misc.xml
+.idea/modules.xml
+.idea/gradle.xml
+.idea/compiler.xml
+.idea/deploymentTargetDropDown.xml
+.idea/androidTestResultsUserPreferences.xml
+.idea/appInsightsSettings.xml
+.idea/migrations.xml
+.idea/inspectionProfiles/
+.idea/shelf/
+.idea/.name
+
+# Capturas de tela do Android Studio
+/captures
+.externalNativeBuild
+.cxx
+
+# Arquivos do macOS
+.DS_Store
+
+# Arquivos do Windows
+Thumbs.db
+
+# Arquivos de assinatura (keystores)
+*.jks
+*.keystore
+
+# Google Services (ex: Firebase)
+google-services.json
+
+# Build outputs específicos do app
+app/build/
+app/release/
+app/debug/
