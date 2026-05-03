@@ -54,4 +54,6 @@ app/src/main/java/com/example/chamati/
 
 ## 👨‍💻 Autor
 
+Luís Felipe Costa Ferreira
+
 Desenvolvido como trabalho prático de Programação de Dispositivos Móveis
