@@ -19,7 +19,7 @@ public class CadastroChamadoActivity extends AppCompatActivity {
     private EditText etTitulo, etLocal, etDescricao;
     private MaterialButtonToggleGroup toggleTipo;
     private TextView tvDataAtual;
-    private MaterialButton btnRegistrar;
+    private MaterialButton btnRegistrar, bntLimpar;
     private ImageView btnVoltar;
     private DataBaseHelper dbHelper;
 
@@ -36,12 +36,30 @@ public class CadastroChamadoActivity extends AppCompatActivity {
         toggleTipo = findViewById(R.id.toggleTipo);
         tvDataAtual = findViewById(R.id.tvDataAtual);
         btnRegistrar = findViewById(R.id.btnRegistrar);
+        bntLimpar = findViewById(R.id.btnLimpar);
         btnVoltar = findViewById(R.id.btnVoltar);
 
         String currentData = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
         tvDataAtual.setText(currentData);
 
-        btnVoltar.setOnClickListener(v -> finish());
+        btnVoltar.setOnClickListener(v -> {
+            String titulo = etTitulo.getText().toString().trim();
+            String local = etLocal.getText().toString().trim();
+            String desc = etDescricao.getText().toString().trim();
+
+
+            if (!titulo.isEmpty() || !local.isEmpty() || !desc.isEmpty()) {
+                new androidx.appcompat.app.AlertDialog.Builder(this)
+                        .setTitle("Sair sem salvar?")
+                        .setMessage("Você começou a preencher o chamado. Se sair agora, os dados serão perdidos.")
+                        .setPositiveButton("Sair", (dialog, which) -> finish())
+                        .setNegativeButton("Continuar editando", null)
+                        .show();
+            }
+            else {
+                finish();
+            }
+        });
 
         btnRegistrar.setOnClickListener(v -> {
             String titulo = etTitulo.getText().toString().trim();
@@ -70,6 +88,15 @@ public class CadastroChamadoActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(this, "Erro ao registrar chamado", Toast.LENGTH_SHORT).show();
             }
+        });
+
+        bntLimpar.setOnClickListener(v -> {
+            etTitulo.setText("");
+            etLocal.setText("");
+            etDescricao.setText("");
+            toggleTipo.clearChecked();
+            etTitulo.requestFocus();
+            Toast.makeText(this, "Campos limpos", Toast.LENGTH_SHORT).show();
         });
     }
 }

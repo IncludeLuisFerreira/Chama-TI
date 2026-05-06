@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_dark"
+    android:gravity="center_horizontal"
     android:orientation="vertical">
 
     <!-- Header -->
@@ -48,8 +49,8 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Título do Chamado"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="16dp"
+                android:hint="Título do Chamado">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etTitulo"
@@ -61,8 +62,8 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Local / Sala"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="16dp"
+                android:hint="Local / Sala">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etLocal"
@@ -74,20 +75,20 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
                 android:text="TIPO DE CHAMADO"
                 android:textColor="@color/text_secondary"
                 android:textSize="12sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp" />
+                android:textStyle="bold" />
 
             <com.google.android.material.button.MaterialButtonToggleGroup
                 android:id="@+id/toggleTipo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:singleSelection="true"
+                app:checkedButton="@+id/btnTI"
                 app:selectionRequired="true"
-                app:checkedButton="@+id/btnTI">
+                app:singleSelection="true">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnInfra"
@@ -96,8 +97,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Infraestrutura"
-                    app:strokeColor="@color/chama_red"
-                    android:textColor="@color/text_primary" />
+                    android:textColor="@color/text_primary"
+                    app:strokeColor="@color/chama_red" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnTI"
@@ -106,15 +107,15 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="TI"
-                    app:strokeColor="@color/chama_cyan"
-                    android:textColor="@color/text_primary" />
+                    android:textColor="@color/text_primary"
+                    app:strokeColor="@color/chama_cyan" />
             </com.google.android.material.button.MaterialButtonToggleGroup>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Descrição do Problema"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="16dp"
+                android:hint="Descrição do Problema">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etDescricao"
@@ -129,15 +130,16 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginBottom="16dp"
                 android:gravity="center_vertical"
-                android:layout_marginBottom="16dp">
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:orientation="vertical">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -145,6 +147,7 @@
                         android:textColor="@color/text_secondary"
                         android:textSize="12sp"
                         android:textStyle="bold" />
+
                     <TextView
                         android:id="@+id/tvDataAtual"
                         android:layout_width="wrap_content"
@@ -158,8 +161,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="end">
+                    android:gravity="end"
+                    android:orientation="vertical">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -167,6 +171,7 @@
                         android:textColor="@color/text_secondary"
                         android:textSize="12sp"
                         android:textStyle="bold" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -179,16 +184,34 @@
                 </LinearLayout>
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:orientation="vertical">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnRegistrar"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_margin="20dp"
+                    android:backgroundTint="@color/chama_red"
+                    android:text="Registrar Chamado"
+                    android:textColor="#FFFFFF"
+                    app:cornerRadius="12dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnLimpar"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_margin="20dp"
+                    android:backgroundTint="@color/card_background"
+                    android:text="Limpar"
+                    android:textColor="#FFFFFF"
+                    app:cornerRadius="12dp" />
+            </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnRegistrar"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_margin="20dp"
-        android:text="Registrar Chamado"
-        android:backgroundTint="@color/chama_red"
-        app:cornerRadius="12dp" />
 
 </LinearLayout>
