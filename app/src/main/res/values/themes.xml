@@ -1,9 +1,37 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.ChamaTI" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="android:windowBackground">@color/background_dark</item>
+        <item name="android:statusBarColor">@color/background_dark</item>
+        <item name="android:windowLightStatusBar">false</item>
+
+        <item name="colorPrimary">@color/chama_red</item>
+        <item name="colorSecondary">@color/chama_cyan</item>
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+
+        <!-- Customize Material Components -->
+        <item name="materialCardViewStyle">@style/Widget.ChamaTI.CardView</item>
+        <item name="textInputStyle">@style/Widget.ChamaTI.TextInputLayout</item>
     </style>
 
     <style name="Theme.ChamaTI" parent="Base.Theme.ChamaTI" />
+
+    <style name="Widget.ChamaTI.CardView" parent="Widget.Material3.CardView.Filled">
+        <item name="cardBackgroundColor">@color/card_background</item>
+        <item name="cardCornerRadius">12dp</item>
+        <item name="strokeWidth">0dp</item>
+    </style>
+
+    <style name="Widget.ChamaTI.TextInputLayout" parent="Widget.Material3.TextInputLayout.FilledBox">
+        <item name="boxBackgroundColor">@color/input_background</item>
+        <item name="boxCornerRadiusTopStart">8dp</item>
+        <item name="boxCornerRadiusTopEnd">8dp</item>
+        <item name="boxCornerRadiusBottomStart">8dp</item>
+        <item name="boxCornerRadiusBottomEnd">8dp</item>
+        <item name="boxStrokeWidth">0dp</item>
+        <item name="boxStrokeWidthFocused">1dp</item>
+        <item name="hintTextColor">@color/text_secondary</item>
+        <item name="android:textColorHint">@color/text_secondary</item>
+    </style>
 </resources>

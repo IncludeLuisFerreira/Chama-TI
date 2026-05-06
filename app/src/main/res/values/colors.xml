@@ -2,4 +2,21 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Paleta ChamaTI -->
+    <color name="background_dark">#0F1115</color>
+    <color name="card_background">#1A1D23</color>
+    <color name="input_background">#23262D</color>
+    <color name="text_primary">#E4E4E7</color>
+    <color name="text_secondary">#A1A1AA</color>
+
+    <color name="chama_red">#FF2A2A</color>
+    <color name="chama_cyan">#00D9FF</color>
+
+    <color name="status_aberto">#71717A</color>
+    <color name="status_andamento">#FACC15</color>
+    <color name="status_concluido">#22C55E</color>
+
+    <color name="badge_infra_bg">#331A1A</color>
+    <color name="badge_ti_bg">#0A2A2E</color>
 </resources>

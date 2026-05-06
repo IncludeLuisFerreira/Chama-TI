@@ -2,64 +2,80 @@ package com.example.chamati;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.example.chamati.DataBase.DataBaseHelper;
 import com.example.chamati.Model.Chamado;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Locale;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import java.util.List;
 
-public class ListaChamadoActivity extends AppCompatActivity {
-    private ListView listView;
-    private Button btnFiltros;
-    private DataBaseHelper db;
+public class ListaChamadoActivity extends AppCompatActivity implements FiltrosBottomSheet.OnFiltroListener {
+
+    private RecyclerView rvChamados;
+    private ChamadoAdapter adapter;
+    private DataBaseHelper dbHelper;
+    private TextView tvContador;
+    private ImageView btnVoltar, btnFiltro;
+    private FloatingActionButton fabAdd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_chamado);
+
+        dbHelper = new DataBaseHelper(this);
+
+        rvChamados = findViewById(R.id.rvChamados);
+        tvContador = findViewById(R.id.tvContadorChamados);
+        btnVoltar = findViewById(R.id.btnVoltarLista);
+        btnFiltro = findViewById(R.id.btnFiltro);
+        fabAdd = findViewById(R.id.fabAdd);
+
+        rvChamados.setLayoutManager(new LinearLayoutManager(this));
         
-        listView = findViewById(R.id.listView);
-        btnFiltros = findViewById(R.id.btnFiltros);
-        db = new DataBaseHelper(this);
+        btnVoltar.setOnClickListener(v -> finish());
         
-        btnFiltros.setOnClickListener(v -> startActivity(new Intent(this, FiltrosActivity.class)));
-        
-        carregarChamados();
-        
-        listView.setOnItemClickListener((parent, view, position, id) -> {
-            HashMap<String, String> item = (HashMap<String, String>) parent.getItemAtPosition(position);
-            Intent intent = new Intent(this, AtendimentoActivity.class);
-            intent.putExtra("id", Long.parseLong(item.get("id")));
+        fabAdd.setOnClickListener(v -> {
+            Intent intent = new Intent(this, CadastroChamadoActivity.class);
             startActivity(intent);
         });
+
+        btnFiltro.setOnClickListener(v -> {
+            FiltrosBottomSheet bottomSheet = new FiltrosBottomSheet();
+            bottomSheet.show(getSupportFragmentManager(), "filtros");
+        });
     }
-    
+
     @Override
     protected void onResume() {
         super.onResume();
         carregarChamados();
     }
-    
+
     private void carregarChamados() {
-        ArrayList<Chamado> chamados = db.getList();
-        ArrayList<HashMap<String, String>> lista = new ArrayList<>();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+        List<Chamado> lista = dbHelper.getAllChamados();
+        tvContador.setText(lista.size() + " chamados");
         
-        for (Chamado c : chamados) {
-            HashMap<String, String> map = new HashMap<>();
-            map.put("id", String.valueOf(c.getId()));
-            map.put("titulo", c.getTitulo());
-            map.put("info", c.getTipoAsString() + " | " + c.getStatusFormatado() + " | " + sdf.format(c.getDataCadastro()));
-            lista.add(map);
+        if (adapter == null) {
+            adapter = new ChamadoAdapter(lista, this);
+            rvChamados.setAdapter(adapter);
+        } else {
+            adapter.updateList(lista);
         }
-        
-        SimpleAdapter adapter = new SimpleAdapter(this, lista, android.R.layout.simple_list_item_2,
-                new String[]{"titulo", "info"}, new int[]{android.R.id.text1, android.R.id.text2});
-        listView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onFiltroAplicado(Integer tipo, String status, String dataIni, String dataFim) {
+        List<Chamado> filtrados = dbHelper.getChamadosFiltrados(tipo, status, dataIni, dataFim);
+        adapter.updateList(filtrados);
+        tvContador.setText(filtrados.size() + " chamados");
+    }
+
+    @Override
+    public void onFiltroLimpo() {
+        carregarChamados();
     }
 }
