@@ -2,85 +2,127 @@ package com.example.chamati;
 
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
-import android.widget.Spinner;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import com.example.chamati.DataBase.DataBaseHelper;
 import com.example.chamati.Model.Chamado;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
+import com.google.android.material.button.MaterialButton;
 
 public class AtendimentoActivity extends AppCompatActivity {
-    private TextView txtTitulo, txtDescricao, txtLocal, txtTipo, txtData;
-    private EditText editSolucao;
-    private Spinner spinnerStatus;
-    private Button btnSalvar;
-    private DataBaseHelper db;
-    private long chamadoId;
+
+    private TextView tvHeaderTitulo, tvAtendTitulo, tvAtendTipo, tvAtendStatus, tvAtendData, tvAtendLocal, tvAtendDescricao;
+    private AutoCompleteTextView spinnerStatus;
+    private EditText etSolucao;
+    private MaterialButton btnSalvar;
+    private ImageView btnVoltar;
+    private DataBaseHelper dbHelper;
+    private Chamado chamado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_atendimento);
-        
-        txtTitulo = findViewById(R.id.txtTitulo);
-        txtDescricao = findViewById(R.id.txtDescricao);
-        txtLocal = findViewById(R.id.txtLocal);
-        txtTipo = findViewById(R.id.txtTipo);
-        txtData = findViewById(R.id.txtData);
-        editSolucao = findViewById(R.id.editSolucao);
+
+        dbHelper = new DataBaseHelper(this);
+
+        int id = getIntent().getIntExtra("CHAMADO_ID", -1);
+        chamado = dbHelper.getChamadoById(id);
+
+        if (chamado == null) {
+            finish();
+            return;
+        }
+
+        tvHeaderTitulo = findViewById(R.id.tvHeaderTitulo);
+        tvAtendTitulo = findViewById(R.id.tvAtendTitulo);
+        tvAtendTipo = findViewById(R.id.tvAtendTipo);
+        tvAtendStatus = findViewById(R.id.tvAtendStatus);
+        tvAtendData = findViewById(R.id.tvAtendData);
+        tvAtendLocal = findViewById(R.id.tvAtendLocal);
+        tvAtendDescricao = findViewById(R.id.tvAtendDescricao);
         spinnerStatus = findViewById(R.id.spinnerStatus);
-        btnSalvar = findViewById(R.id.btnSalvar);
+        etSolucao = findViewById(R.id.etSolucao);
+        btnSalvar = findViewById(R.id.btnSalvarAtendimento);
+        btnVoltar = findViewById(R.id.btnVoltarAtendimento);
+
+        setupData();
+
+        btnVoltar.setOnClickListener(v -> finish());
+
+        btnSalvar.setOnClickListener(v -> {
+            String novoStatusStr = spinnerStatus.getText().toString();
+            String statusDB = "aberto";
+            if (novoStatusStr.equals("Em Atendimento")) statusDB = "andamento";
+            else if (novoStatusStr.equals("Concluído")) statusDB = "fechado";
+
+            String solucao = etSolucao.getText().toString().trim();
+            
+            if (statusDB.equals("fechado") && solucao.isEmpty()) {
+                Toast.makeText(this, "Informe a solução antes de concluir o chamado", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            chamado.setStatus(statusDB);
+            chamado.setSolucao(solucao);
+
+            if (dbHelper.atualizarChamado(chamado) > 0) {
+                Toast.makeText(this, "Atendimento salvo!", Toast.LENGTH_SHORT).show();
+                finish();
+            } else {
+                Toast.makeText(this, "Erro ao salvar", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void setupData() {
+        tvHeaderTitulo.setText("Chamado #" + chamado.getId());
+        tvAtendTitulo.setText(chamado.getTitulo());
+        tvAtendData.setText(chamado.getDataCadastro());
+        tvAtendLocal.setText(chamado.getLocal());
+        tvAtendDescricao.setText(chamado.getDescricao());
         
-        db = new DataBaseHelper(this);
-        chamadoId = getIntent().getLongExtra("id", -1);
-        
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.status_array, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        String solucao = chamado.getSolucao();
+        etSolucao.setText(solucao != null ? solucao : "");
+
+        if (chamado.getTipo() == 0) {
+            tvAtendTipo.setText("TI");
+            tvAtendTipo.setBackgroundResource(R.drawable.badge_ti);
+        } else {
+            tvAtendTipo.setText("Infraestrutura");
+            tvAtendTipo.setBackgroundResource(R.drawable.badge_infra);
+        }
+
+        updateStatusBadge(chamado.getStatus());
+
+        String[] statuses = {"Aberto", "Em Atendimento", "Concluído"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, statuses);
         spinnerStatus.setAdapter(adapter);
         
-        carregarChamado();
-        
-        btnSalvar.setOnClickListener(v -> salvarAtendimento());
+        String currentStatusStr = "Aberto";
+        if (chamado.getStatus().equals("andamento")) currentStatusStr = "Em Atendimento";
+        else if (chamado.getStatus().equals("fechado")) currentStatusStr = "Concluído";
+        spinnerStatus.setText(currentStatusStr, false);
     }
-    
-    private void carregarChamado() {
-        Chamado c = db.getChamadoById(chamadoId);
-        if (c != null) {
-            txtTitulo.setText(c.getTitulo());
-            txtDescricao.setText(c.getDescricao());
-            txtLocal.setText(c.getLocal());
-            txtTipo.setText(c.getTipoAsString());
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
-            txtData.setText(sdf.format(c.getDataCadastro()));
-            
-            if (c.getSolucao() != null) {
-                editSolucao.setText(c.getSolucao());
-            }
-            
-            int pos = 0;
-            if (c.getStatus().equals("andamento")) pos = 1;
-            else if (c.getStatus().equals("fechado")) pos = 2;
-            spinnerStatus.setSelection(pos);
+
+    private void updateStatusBadge(String status) {
+        String text = "ABERTO";
+        int color = R.color.status_aberto;
+        switch (status) {
+            case "andamento":
+                text = "EM ATENDIMENTO";
+                color = R.color.status_andamento;
+                break;
+            case "fechado":
+                text = "CONCLUÍDO";
+                color = R.color.status_concluido;
+                break;
         }
-    }
-    
-    private void salvarAtendimento() {
-        String solucao = editSolucao.getText().toString().trim();
-        String status = spinnerStatus.getSelectedItem().toString().toLowerCase();
-        if (status.contains("andamento")) status = "andamento";
-        else if (status.contains("fechado")) status = "fechado";
-        else status = "aberto";
-        
-        if (db.updateChamado(chamadoId, status, solucao)) {
-            Toast.makeText(this, "Atendimento salvo!", Toast.LENGTH_SHORT).show();
-            finish();
-        } else {
-            Toast.makeText(this, "Erro ao salvar", Toast.LENGTH_SHORT).show();
-        }
+        tvAtendStatus.setText(text);
+        tvAtendStatus.setBackgroundTintList(ContextCompat.getColorStateList(this, color));
     }
 }
