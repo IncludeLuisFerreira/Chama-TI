@@ -109,6 +109,27 @@
                     android:textColor="@color/text_primary" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCapturarFoto"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginBottom="16dp"
+                android:backgroundTint="@color/card_background"
+                android:icon="@android:drawable/ic_menu_camera"
+                android:text="Capturar Foto"
+                android:textColor="@color/text_primary"
+                app:cornerRadius="12dp"
+                app:iconTint="@color/chama_cyan" />
+
+            <ImageView
+                android:id="@+id/ivFotoPreview"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginBottom="16dp"
+                android:background="@color/input_background"
+                android:scaleType="centerCrop"
+                android:visibility="gone" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
