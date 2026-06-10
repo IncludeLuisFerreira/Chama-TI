@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import com.example.chamati.Cloud.ChamadoCloudManager;
 import com.example.chamati.DataBase.DataBaseHelper;
 import com.example.chamati.Model.Chamado;
 import com.google.android.material.button.MaterialButton;
@@ -24,6 +25,7 @@ public class AtendimentoActivity extends AppCompatActivity {
     private MaterialButton btnSalvar;
     private ImageView ivAtendimentoImagem;
     private DataBaseHelper dbHelper;
+    private ChamadoCloudManager cloudManager;
     private Chamado chamado;
 
     @Override
@@ -32,6 +34,7 @@ public class AtendimentoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_atendimento);
 
         dbHelper = new DataBaseHelper(this);
+        cloudManager = new ChamadoCloudManager();
 
         int id = getIntent().getIntExtra("CHAMADO_ID", -1);
         chamado = dbHelper.getChamadoById(id);
@@ -79,6 +82,19 @@ public class AtendimentoActivity extends AppCompatActivity {
 
             if (dbHelper.atualizarChamado(chamado) > 0) {
                 Toast.makeText(this, "Atendimento salvo!", Toast.LENGTH_SHORT).show();
+
+                cloudManager.atualizarChamadoCloud(chamado, new ChamadoCloudManager.SyncCallback() {
+                    @Override
+                    public void onSuccess(String parseObjectId) {
+                        // Atualizado na nuvem com sucesso
+                    }
+
+                    @Override
+                    public void onError(String errorMessage) {
+                        // Falha silenciosa - dados ja salvos localmente
+                    }
+                });
+
                 finish();
             } else {
                 Toast.makeText(this, "Erro ao salvar", Toast.LENGTH_SHORT).show();
