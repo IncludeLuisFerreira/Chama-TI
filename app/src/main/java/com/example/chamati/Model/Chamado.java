@@ -7,10 +7,12 @@ public class Chamado implements Serializable {
     private String titulo;
     private String descricao;
     private String local;
-    private int tipo; // 0=TI, 1=Infraestrutura
+    private int tipo;
     private String dataCadastro;
-    private String status; // "aberto", "andamento", "fechado"
+    private String status;
     private String solucao;
+    private String imagemPath;
+    private String parseObjectId;
 
     public Chamado() {}
 
@@ -46,4 +48,10 @@ public class Chamado implements Serializable {
 
     public String getSolucao() { return solucao; }
     public void setSolucao(String solucao) { this.solucao = solucao; }
+
+    public String getImagemPath() { return imagemPath; }
+    public void setImagemPath(String imagemPath) { this.imagemPath = imagemPath; }
+
+    public String getParseObjectId() { return parseObjectId; }
+    public void setParseObjectId(String parseObjectId) { this.parseObjectId = parseObjectId; }
 }
