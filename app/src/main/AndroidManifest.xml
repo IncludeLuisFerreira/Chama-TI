@@ -24,6 +24,12 @@
             android:name=".CadastroChamadoActivity"
             android:exported="false" />
         <activity
+            android:name=".SobreActivity"
+            android:exported="false" />
+        <activity
+            android:name=".EstatisticasActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
