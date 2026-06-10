@@ -17,6 +17,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
+import com.example.chamati.Cloud.ChamadoCloudManager;
 import com.example.chamati.DataBase.DataBaseHelper;
 import com.example.chamati.Model.Chamado;
 import com.google.android.material.button.MaterialButton;
@@ -36,6 +37,7 @@ public class CadastroChamadoActivity extends AppCompatActivity {
     private MaterialButton btnRegistrar, bntLimpar, btnCapturarFoto;
     private ImageView ivFotoPreview;
     private DataBaseHelper dbHelper;
+    private ChamadoCloudManager cloudManager;
     private String currentPhotoPath;
 
     private final ActivityResultLauncher<Uri> cameraLauncher = registerForActivityResult(
@@ -63,6 +65,7 @@ public class CadastroChamadoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_cadastro_chamado);
 
         dbHelper = new DataBaseHelper(this);
+        cloudManager = new ChamadoCloudManager();
 
         etTitulo = findViewById(R.id.etTitulo);
         etLocal = findViewById(R.id.etLocal);
@@ -140,7 +143,22 @@ public class CadastroChamadoActivity extends AppCompatActivity {
             long id = dbHelper.inserirChamado(novo);
 
             if (id != -1) {
+                novo.setId((int) id);
                 Toast.makeText(this, "Chamado registrado com sucesso!", Toast.LENGTH_SHORT).show();
+
+                cloudManager.salvarChamadoCloud(novo, new ChamadoCloudManager.SyncCallback() {
+                    @Override
+                    public void onSuccess(String parseObjectId) {
+                        novo.setParseObjectId(parseObjectId);
+                        dbHelper.atualizarChamado(novo);
+                    }
+
+                    @Override
+                    public void onError(String errorMessage) {
+                        // Falha silenciosa - dados ja salvos localmente
+                    }
+                });
+
                 finish();
             } else {
                 Toast.makeText(this, "Erro ao registrar chamado", Toast.LENGTH_SHORT).show();
