@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_novo_chamado"
+        android:icon="@android:drawable/ic_input_add"
+        android:title="Novo Chamado" />
+    <item
+        android:id="@+id/nav_listagem"
+        android:icon="@android:drawable/ic_menu_sort_by_size"
+        android:title="Listagem de Chamados" />
+    <item
+        android:id="@+id/nav_estatisticas"
+        android:icon="@android:drawable/ic_menu_info_details"
+        android:title="Estatísticas" />
+    <item
+        android:id="@+id/nav_sobre"
+        android:icon="@android:drawable/ic_menu_help"
+        android:title="Sobre o Sistema" />
+</menu>
