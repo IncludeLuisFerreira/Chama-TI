@@ -2,10 +2,10 @@ package com.example.chamati;
 
 import android.os.Bundle;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import com.example.chamati.DataBase.DataBaseHelper;
 import com.example.chamati.Model.Chamado;
 import com.google.android.material.button.MaterialButton;
@@ -20,7 +20,6 @@ public class CadastroChamadoActivity extends AppCompatActivity {
     private MaterialButtonToggleGroup toggleTipo;
     private TextView tvDataAtual;
     private MaterialButton btnRegistrar, bntLimpar;
-    private ImageView btnVoltar;
     private DataBaseHelper dbHelper;
 
     @Override
@@ -37,16 +36,16 @@ public class CadastroChamadoActivity extends AppCompatActivity {
         tvDataAtual = findViewById(R.id.tvDataAtual);
         btnRegistrar = findViewById(R.id.btnRegistrar);
         bntLimpar = findViewById(R.id.btnLimpar);
-        btnVoltar = findViewById(R.id.btnVoltar);
 
-        String currentData = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
-        tvDataAtual.setText(currentData);
-
-        btnVoltar.setOnClickListener(v -> {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        toolbar.setNavigationOnClickListener(v -> {
             String titulo = etTitulo.getText().toString().trim();
             String local = etLocal.getText().toString().trim();
             String desc = etDescricao.getText().toString().trim();
-
 
             if (!titulo.isEmpty() || !local.isEmpty() || !desc.isEmpty()) {
                 new androidx.appcompat.app.AlertDialog.Builder(this)
@@ -55,11 +54,13 @@ public class CadastroChamadoActivity extends AppCompatActivity {
                         .setPositiveButton("Sair", (dialog, which) -> finish())
                         .setNegativeButton("Continuar editando", null)
                         .show();
-            }
-            else {
+            } else {
                 finish();
             }
         });
+
+        String currentData = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
+        tvDataAtual.setText(currentData);
 
         btnRegistrar.setOnClickListener(v -> {
             String titulo = etTitulo.getText().toString().trim();

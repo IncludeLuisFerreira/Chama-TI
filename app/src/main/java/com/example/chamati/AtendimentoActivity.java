@@ -4,10 +4,10 @@ import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import com.example.chamati.DataBase.DataBaseHelper;
 import com.example.chamati.Model.Chamado;
@@ -15,11 +15,10 @@ import com.google.android.material.button.MaterialButton;
 
 public class AtendimentoActivity extends AppCompatActivity {
 
-    private TextView tvHeaderTitulo, tvAtendTitulo, tvAtendTipo, tvAtendStatus, tvAtendData, tvAtendLocal, tvAtendDescricao;
+    private TextView tvAtendTitulo, tvAtendTipo, tvAtendStatus, tvAtendData, tvAtendLocal, tvAtendDescricao;
     private AutoCompleteTextView spinnerStatus;
     private EditText etSolucao;
     private MaterialButton btnSalvar;
-    private ImageView btnVoltar;
     private DataBaseHelper dbHelper;
     private Chamado chamado;
 
@@ -38,7 +37,6 @@ public class AtendimentoActivity extends AppCompatActivity {
             return;
         }
 
-        tvHeaderTitulo = findViewById(R.id.tvHeaderTitulo);
         tvAtendTitulo = findViewById(R.id.tvAtendTitulo);
         tvAtendTipo = findViewById(R.id.tvAtendTipo);
         tvAtendStatus = findViewById(R.id.tvAtendStatus);
@@ -48,11 +46,15 @@ public class AtendimentoActivity extends AppCompatActivity {
         spinnerStatus = findViewById(R.id.spinnerStatus);
         etSolucao = findViewById(R.id.etSolucao);
         btnSalvar = findViewById(R.id.btnSalvarAtendimento);
-        btnVoltar = findViewById(R.id.btnVoltarAtendimento);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        toolbar.setNavigationOnClickListener(v -> finish());
 
         setupData();
-
-        btnVoltar.setOnClickListener(v -> finish());
 
         btnSalvar.setOnClickListener(v -> {
             String novoStatusStr = spinnerStatus.getText().toString();
@@ -80,7 +82,9 @@ public class AtendimentoActivity extends AppCompatActivity {
     }
 
     private void setupData() {
-        tvHeaderTitulo.setText("Chamado #" + chamado.getId());
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("Chamado #" + chamado.getId());
+        }
         tvAtendTitulo.setText(chamado.getTitulo());
         tvAtendData.setText(chamado.getDataCadastro());
         tvAtendLocal.setText(chamado.getLocal());
