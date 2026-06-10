@@ -3,6 +3,7 @@ package com.example.chamati;
 import android.os.Bundle;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import com.example.chamati.DataBase.DataBaseHelper;
 
 public class EstatisticasActivity extends AppCompatActivity {
@@ -22,7 +23,12 @@ public class EstatisticasActivity extends AppCompatActivity {
         tvCountAndamento = findViewById(R.id.tvCountAndamento);
         tvCountConcluidos = findViewById(R.id.tvCountConcluidos);
 
-        findViewById(R.id.btnVoltar).setOnClickListener(v -> finish());
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        toolbar.setNavigationOnClickListener(v -> finish());
     }
 
     @Override

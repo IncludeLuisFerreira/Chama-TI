@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.chamati.DataBase.DataBaseHelper;
@@ -18,7 +19,7 @@ public class ListaChamadoActivity extends AppCompatActivity implements FiltrosBo
     private ChamadoAdapter adapter;
     private DataBaseHelper dbHelper;
     private TextView tvContador;
-    private ImageView btnVoltar, btnFiltro;
+    private ImageView btnFiltro;
     private FloatingActionButton fabAdd;
 
     @Override
@@ -30,13 +31,17 @@ public class ListaChamadoActivity extends AppCompatActivity implements FiltrosBo
 
         rvChamados = findViewById(R.id.rvChamados);
         tvContador = findViewById(R.id.tvContadorChamados);
-        btnVoltar = findViewById(R.id.btnVoltarLista);
         btnFiltro = findViewById(R.id.btnFiltro);
         fabAdd = findViewById(R.id.fabAdd);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        toolbar.setNavigationOnClickListener(v -> finish());
+
         rvChamados.setLayoutManager(new LinearLayoutManager(this));
-        
-        btnVoltar.setOnClickListener(v -> finish());
         
         fabAdd.setOnClickListener(v -> {
             Intent intent = new Intent(this, CadastroChamadoActivity.class);

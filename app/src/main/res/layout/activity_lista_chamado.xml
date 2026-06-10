@@ -10,43 +10,26 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- Header -->
-        <LinearLayout
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp">
-
-            <ImageView
-                android:id="@+id/btnVoltarLista"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:focusable="true"
-                android:src="@android:drawable/ic_menu_revert"
-                app:tint="@color/text_primary" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_weight="1"
-                android:text="Meus Chamados"
-                android:textColor="@color/text_primary"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+            android:background="@color/background_dark"
+            app:title="Meus Chamados"
+            app:titleTextColor="@color/text_primary"
+            app:navigationIcon="@android:drawable/ic_menu_revert"
+            app:navigationIconTint="@color/text_primary">
 
             <ImageView
                 android:id="@+id/btnFiltro"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="end"
                 android:clickable="true"
                 android:focusable="true"
                 android:src="@android:drawable/ic_menu_search"
                 app:tint="@color/text_primary" />
-        </LinearLayout>
+        </com.google.android.material.appbar.MaterialToolbar>
 
         <TextView
             android:id="@+id/tvContadorChamados"
