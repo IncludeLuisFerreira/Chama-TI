@@ -3,14 +3,17 @@ package com.example.chamati;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.chamati.Model.Chamado;
+import java.io.File;
 import java.util.List;
 
 public class ChamadoAdapter extends RecyclerView.Adapter<ChamadoAdapter.ChamadoViewHolder> {
@@ -36,6 +39,20 @@ public class ChamadoAdapter extends RecyclerView.Adapter<ChamadoAdapter.ChamadoV
 
         holder.tvTitulo.setText(chamado.getTitulo());
         holder.tvData.setText(chamado.getDataCadastro());
+
+        String imagemPath = chamado.getImagemPath();
+        if (imagemPath != null && !imagemPath.isEmpty() && new File(imagemPath).exists()) {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inSampleSize = 4;
+            holder.ivThumb.setImageBitmap(BitmapFactory.decodeFile(imagemPath, options));
+            holder.ivThumb.setVisibility(View.VISIBLE);
+            holder.ivThumb.setImageTintList(null);
+        } else {
+            holder.ivThumb.setVisibility(View.VISIBLE);
+            holder.ivThumb.setImageResource(android.R.drawable.ic_menu_gallery);
+            holder.ivThumb.setImageTintList(ColorStateList.valueOf(
+                    ContextCompat.getColor(context, R.color.text_secondary)));
+        }
 
         // Tipo
         if (chamado.getTipo() == 0) {
@@ -88,6 +105,7 @@ public class ChamadoAdapter extends RecyclerView.Adapter<ChamadoAdapter.ChamadoV
     static class ChamadoViewHolder extends RecyclerView.ViewHolder {
         TextView tvTitulo, tvTipo, tvData, tvStatus;
         View viewStatusDot;
+        ImageView ivThumb;
 
         public ChamadoViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -96,6 +114,7 @@ public class ChamadoAdapter extends RecyclerView.Adapter<ChamadoAdapter.ChamadoV
             tvData = itemView.findViewById(R.id.tvItemData);
             tvStatus = itemView.findViewById(R.id.tvItemStatus);
             viewStatusDot = itemView.findViewById(R.id.viewStatusDot);
+            ivThumb = itemView.findViewById(R.id.ivItemThumb);
         }
     }
 }

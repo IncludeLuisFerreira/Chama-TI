@@ -1,9 +1,11 @@
 package com.example.chamati;
 
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +14,7 @@ import androidx.core.content.ContextCompat;
 import com.example.chamati.DataBase.DataBaseHelper;
 import com.example.chamati.Model.Chamado;
 import com.google.android.material.button.MaterialButton;
+import java.io.File;
 
 public class AtendimentoActivity extends AppCompatActivity {
 
@@ -19,6 +22,7 @@ public class AtendimentoActivity extends AppCompatActivity {
     private AutoCompleteTextView spinnerStatus;
     private EditText etSolucao;
     private MaterialButton btnSalvar;
+    private ImageView ivAtendimentoImagem;
     private DataBaseHelper dbHelper;
     private Chamado chamado;
 
@@ -46,6 +50,7 @@ public class AtendimentoActivity extends AppCompatActivity {
         spinnerStatus = findViewById(R.id.spinnerStatus);
         etSolucao = findViewById(R.id.etSolucao);
         btnSalvar = findViewById(R.id.btnSalvarAtendimento);
+        ivAtendimentoImagem = findViewById(R.id.ivAtendimentoImagem);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -86,6 +91,17 @@ public class AtendimentoActivity extends AppCompatActivity {
             getSupportActionBar().setTitle("Chamado #" + chamado.getId());
         }
         tvAtendTitulo.setText(chamado.getTitulo());
+
+        String imagemPath = chamado.getImagemPath();
+        if (imagemPath != null && !imagemPath.isEmpty() && new File(imagemPath).exists()) {
+            ivAtendimentoImagem.setImageBitmap(BitmapFactory.decodeFile(imagemPath));
+            ivAtendimentoImagem.setImageTintList(null);
+        } else {
+            ivAtendimentoImagem.setImageResource(android.R.drawable.ic_menu_gallery);
+            ivAtendimentoImagem.setImageTintList(
+                    android.content.res.ColorStateList.valueOf(
+                            ContextCompat.getColor(this, R.color.text_secondary)));
+        }
         tvAtendData.setText(chamado.getDataCadastro());
         tvAtendLocal.setText(chamado.getLocal());
         tvAtendDescricao.setText(chamado.getDescricao());
