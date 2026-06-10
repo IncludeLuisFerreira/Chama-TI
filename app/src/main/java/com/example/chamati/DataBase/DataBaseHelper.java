@@ -12,7 +12,7 @@ import java.util.List;
 public class DataBaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "chamaTI.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     public static final String TABLE_CHAMADOS = "chamados";
     public static final String COLUMN_ID = "id";
@@ -23,6 +23,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_DATA_CADASTRO = "data_cadastro";
     public static final String COLUMN_STATUS = "status";
     public static final String COLUMN_SOLUCAO = "solucao";
+    public static final String COLUMN_IMAGEM_PATH = "imagem_path";
+    public static final String COLUMN_PARSE_OBJECT_ID = "parse_object_id";
 
     public DataBaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -38,14 +40,18 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 COLUMN_TIPO + " INTEGER, " +
                 COLUMN_DATA_CADASTRO + " TEXT, " +
                 COLUMN_STATUS + " TEXT, " +
-                COLUMN_SOLUCAO + " TEXT)";
+                COLUMN_SOLUCAO + " TEXT, " +
+                COLUMN_IMAGEM_PATH + " TEXT, " +
+                COLUMN_PARSE_OBJECT_ID + " TEXT)";
         db.execSQL(createTable);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CHAMADOS);
-        onCreate(db);
+        if (oldVersion < 2) {
+            db.execSQL("ALTER TABLE " + TABLE_CHAMADOS + " ADD COLUMN " + COLUMN_IMAGEM_PATH + " TEXT");
+            db.execSQL("ALTER TABLE " + TABLE_CHAMADOS + " ADD COLUMN " + COLUMN_PARSE_OBJECT_ID + " TEXT");
+        }
     }
 
     public long inserirChamado(Chamado chamado) {
@@ -58,6 +64,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_DATA_CADASTRO, chamado.getDataCadastro());
         values.put(COLUMN_STATUS, chamado.getStatus());
         values.put(COLUMN_SOLUCAO, chamado.getSolucao());
+        values.put(COLUMN_IMAGEM_PATH, chamado.getImagemPath());
+        values.put(COLUMN_PARSE_OBJECT_ID, chamado.getParseObjectId());
         return db.insert(TABLE_CHAMADOS, null, values);
     }
 
@@ -70,6 +78,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_TIPO, chamado.getTipo());
         values.put(COLUMN_STATUS, chamado.getStatus());
         values.put(COLUMN_SOLUCAO, chamado.getSolucao());
+        values.put(COLUMN_IMAGEM_PATH, chamado.getImagemPath());
+        values.put(COLUMN_PARSE_OBJECT_ID, chamado.getParseObjectId());
 
         return db.update(TABLE_CHAMADOS, values, COLUMN_ID + " = ?",
                 new String[]{String.valueOf(chamado.getId())});
@@ -112,6 +122,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         c.setDataCadastro(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DATA_CADASTRO)));
         c.setStatus(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_STATUS)));
         c.setSolucao(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_SOLUCAO)));
+        c.setImagemPath(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_IMAGEM_PATH)));
+        c.setParseObjectId(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PARSE_OBJECT_ID)));
         return c;
     }
 
