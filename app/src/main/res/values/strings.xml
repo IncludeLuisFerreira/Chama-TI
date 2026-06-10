@@ -3,6 +3,11 @@
     <string name="navigation_drawer_open">Abrir navegação</string>
     <string name="navigation_drawer_close">Fechar navegação</string>
 
+    <string name="integrantes_label">Integrante</string>
+    <string name="integrantes_nomes">Luís Felipe Costa Ferreira</string>
+    <string name="turma_label">Turma</string>
+    <string name="turma_valor">7° período de Engenharia de Computação</string>
+
     <string-array name="status_array">
         <item>Aberto</item>
         <item>Em Andamento</item>
