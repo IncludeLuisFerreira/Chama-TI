@@ -1,6 +1,8 @@
 package com.example.chamati;
 
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,6 +19,7 @@ import java.util.Locale;
 public class CadastroChamadoActivity extends AppCompatActivity {
 
     private EditText etTitulo, etLocal, etDescricao;
+    private AutoCompleteTextView spinnerStatus;
     private MaterialButtonToggleGroup toggleTipo;
     private TextView tvDataAtual;
     private MaterialButton btnRegistrar, bntLimpar;
@@ -36,6 +39,11 @@ public class CadastroChamadoActivity extends AppCompatActivity {
         tvDataAtual = findViewById(R.id.tvDataAtual);
         btnRegistrar = findViewById(R.id.btnRegistrar);
         bntLimpar = findViewById(R.id.btnLimpar);
+        spinnerStatus = findViewById(R.id.spinnerStatusCadastro);
+
+        String[] statuses = {"Aberto", "Em Andamento", "Concluído"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, statuses);
+        spinnerStatus.setAdapter(adapter);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -79,7 +87,12 @@ public class CadastroChamadoActivity extends AppCompatActivity {
 
             int tipo = (toggleTipo.getCheckedButtonId() == R.id.btnInfra) ? 1 : 0;
 
-            Chamado novo = new Chamado(titulo, descricao, local, tipo, currentData, "aberto");
+            String statusSelecionado = spinnerStatus.getText().toString();
+            String statusDB = "aberto";
+            if (statusSelecionado.equals("Em Andamento")) statusDB = "andamento";
+            else if (statusSelecionado.equals("Concluído")) statusDB = "fechado";
+
+            Chamado novo = new Chamado(titulo, descricao, local, tipo, currentData, statusDB);
             novo.setSolucao("");
             long id = dbHelper.inserirChamado(novo);
 
@@ -96,6 +109,7 @@ public class CadastroChamadoActivity extends AppCompatActivity {
             etLocal.setText("");
             etDescricao.setText("");
             toggleTipo.clearChecked();
+            spinnerStatus.setText("Aberto", false);
             etTitulo.requestFocus();
             Toast.makeText(this, "Campos limpos", Toast.LENGTH_SHORT).show();
         });
