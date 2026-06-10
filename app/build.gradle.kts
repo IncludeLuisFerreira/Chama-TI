@@ -42,6 +42,9 @@ dependencies {
     implementation(libs.constraintlayout)
     implementation(libs.recyclerview)
     implementation(libs.cardview)
+    implementation(libs.parse.android) {
+        exclude(group = "com.android.support")
+    }
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
