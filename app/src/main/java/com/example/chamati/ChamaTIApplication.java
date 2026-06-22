@@ -10,8 +10,8 @@ public class ChamaTIApplication extends Application {
         super.onCreate();
 
         Parse.initialize(new Parse.Configuration.Builder(this)
-                .applicationId("SEU_APPLICATION_ID")
-                .clientKey("SEU_CLIENT_KEY")
+                .applicationId(BuildConfig.PARSE_APPLICATION_ID)
+                .clientKey(BuildConfig.PARSE_CLIENT_KEY)
                 .server("https://parseapi.back4app.com")
                 .build());
     }

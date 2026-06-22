@@ -1,5 +1,15 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
+}
+
+// Carrega chaves do secrets.properties (ignorado pelo git)
+val secretsFile = rootProject.file("secrets.properties")
+val secrets = Properties().apply {
+    if (secretsFile.exists()) {
+        load(secretsFile.inputStream())
+    }
 }
 
 android {
@@ -14,6 +24,11 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "PARSE_APPLICATION_ID",
+            "\"${secrets.getProperty("PARSE_APPLICATION_ID", "SEU_APPLICATION_ID")}\"")
+        buildConfigField("String", "PARSE_CLIENT_KEY",
+            "\"${secrets.getProperty("PARSE_CLIENT_KEY", "SEU_CLIENT_KEY")}\"")
     }
 
     buildTypes {
@@ -33,6 +48,7 @@ android {
 
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
