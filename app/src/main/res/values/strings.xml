@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">ChamaTI</string>
-    <string name="navigation_drawer_open">Abrir navegação</string>
-    <string name="navigation_drawer_close">Fechar navegação</string>
+    <string name="navigation_drawer_open">Abrir menu</string>
+    <string name="navigation_drawer_close">Fechar menu</string>
 
     <string name="integrantes_label">Integrante</string>
     <string name="integrantes_nomes">Luís Felipe Costa Ferreira</string>

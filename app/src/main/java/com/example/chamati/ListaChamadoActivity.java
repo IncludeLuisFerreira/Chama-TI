@@ -2,10 +2,9 @@ package com.example.chamati;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ImageView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.chamati.DataBase.DataBaseHelper;
@@ -13,45 +12,49 @@ import com.example.chamati.Model.Chamado;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.List;
 
-public class ListaChamadoActivity extends AppCompatActivity implements FiltrosBottomSheet.OnFiltroListener {
+public class ListaChamadoActivity extends BaseDrawerActivity implements FiltrosBottomSheet.OnFiltroListener {
 
     private RecyclerView rvChamados;
     private ChamadoAdapter adapter;
     private DataBaseHelper dbHelper;
     private TextView tvContador;
-    private ImageView btnFiltro;
     private FloatingActionButton fabAdd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_chamado);
+        setActivityTitle("Meus Chamados");
+        setSelectedNavItem(R.id.nav_listagem);
 
         dbHelper = new DataBaseHelper(this);
 
         rvChamados = findViewById(R.id.rvChamados);
         tvContador = findViewById(R.id.tvContadorChamados);
-        btnFiltro = findViewById(R.id.btnFiltro);
         fabAdd = findViewById(R.id.fabAdd);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-        toolbar.setNavigationOnClickListener(v -> finish());
-
         rvChamados.setLayoutManager(new LinearLayoutManager(this));
-        
+
         fabAdd.setOnClickListener(v -> {
             Intent intent = new Intent(this, CadastroChamadoActivity.class);
             startActivity(intent);
         });
+    }
 
-        btnFiltro.setOnClickListener(v -> {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_lista_chamado, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_filter) {
             FiltrosBottomSheet bottomSheet = new FiltrosBottomSheet();
             bottomSheet.show(getSupportFragmentManager(), "filtros");
-        });
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -63,7 +66,7 @@ public class ListaChamadoActivity extends AppCompatActivity implements FiltrosBo
     private void carregarChamados() {
         List<Chamado> lista = dbHelper.getAllChamados();
         tvContador.setText(lista.size() + " chamados");
-        
+
         if (adapter == null) {
             adapter = new ChamadoAdapter(lista, this);
             rvChamados.setAdapter(adapter);

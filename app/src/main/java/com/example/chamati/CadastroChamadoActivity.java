@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 import com.example.chamati.Cloud.ChamadoCloudManager;
+import com.example.chamati.Utils.ImageUtils;
 import com.example.chamati.DataBase.DataBaseHelper;
 import com.example.chamati.Model.Chamado;
 import com.google.android.material.button.MaterialButton;
@@ -44,6 +45,7 @@ public class CadastroChamadoActivity extends AppCompatActivity {
             new ActivityResultContracts.TakePicture(),
             success -> {
                 if (success) {
+                    ImageUtils.compressImage(currentPhotoPath, 1024, 70);
                     ivFotoPreview.setVisibility(ImageView.VISIBLE);
                     ivFotoPreview.setImageURI(Uri.fromFile(new File(currentPhotoPath)));
                 }

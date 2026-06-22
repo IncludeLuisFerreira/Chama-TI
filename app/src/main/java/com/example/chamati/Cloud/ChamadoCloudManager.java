@@ -3,8 +3,10 @@ package com.example.chamati.Cloud;
 import com.example.chamati.Model.Chamado;
 import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.SaveCallback;
+import java.io.File;
 
 public class ChamadoCloudManager {
 
@@ -24,8 +26,32 @@ public class ChamadoCloudManager {
         parseObject.put("solucao", chamado.getSolucao());
 
         String imagemPath = chamado.getImagemPath();
+
         if (imagemPath != null && !imagemPath.isEmpty()) {
-            parseObject.put("imagemPath", imagemPath);
+            File imageFile = new File(imagemPath);
+            if (imageFile.exists()) {
+                ParseFile parseFile = new ParseFile(imageFile);
+                parseFile.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e == null) {
+                            parseObject.put("imagem", parseFile);
+                            parseObject.put("imagemPath", parseFile.getUrl());
+                        }
+                        parseObject.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(ParseException saveError) {
+                                if (saveError == null) {
+                                    callback.onSuccess(parseObject.getObjectId());
+                                } else {
+                                    callback.onError(saveError.getMessage());
+                                }
+                            }
+                        });
+                    }
+                });
+                return;
+            }
         }
 
         parseObject.saveInBackground(new SaveCallback() {
