@@ -1,10 +1,10 @@
 package com.example.chamati;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -40,6 +40,7 @@ public class CadastroChamadoActivity extends AppCompatActivity {
     private DataBaseHelper dbHelper;
     private ChamadoCloudManager cloudManager;
     private String currentPhotoPath;
+    private ProgressDialog progressDialog;
 
     private final ActivityResultLauncher<Uri> cameraLauncher = registerForActivityResult(
             new ActivityResultContracts.TakePicture(),
@@ -146,22 +147,44 @@ public class CadastroChamadoActivity extends AppCompatActivity {
 
             if (id != -1) {
                 novo.setId((int) id);
-                Toast.makeText(this, "Chamado registrado com sucesso!", Toast.LENGTH_SHORT).show();
+
+                progressDialog = new ProgressDialog(this);
+                progressDialog.setMessage("Salvando chamado na nuvem...");
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+
+                btnRegistrar.setEnabled(false);
 
                 cloudManager.salvarChamadoCloud(novo, new ChamadoCloudManager.SyncCallback() {
                     @Override
                     public void onSuccess(String parseObjectId) {
                         novo.setParseObjectId(parseObjectId);
                         dbHelper.atualizarChamado(novo);
+
+                        runOnUiThread(() -> {
+                            if (progressDialog != null && progressDialog.isShowing()) {
+                                progressDialog.dismiss();
+                            }
+                            Toast.makeText(CadastroChamadoActivity.this,
+                                    "Chamado registrado com sucesso!", Toast.LENGTH_SHORT).show();
+                            finish();
+                        });
                     }
 
                     @Override
                     public void onError(String errorMessage) {
-                        // Falha silenciosa - dados ja salvos localmente
+                        runOnUiThread(() -> {
+                            if (progressDialog != null && progressDialog.isShowing()) {
+                                progressDialog.dismiss();
+                            }
+                            btnRegistrar.setEnabled(true);
+                            Toast.makeText(CadastroChamadoActivity.this,
+                                    "Chamado salvo localmente, mas erro ao sincronizar com a nuvem: "
+                                            + errorMessage, Toast.LENGTH_LONG).show();
+                            finish();
+                        });
                     }
                 });
-
-                finish();
             } else {
                 Toast.makeText(this, "Erro ao registrar chamado", Toast.LENGTH_SHORT).show();
             }

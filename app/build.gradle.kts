@@ -61,6 +61,7 @@ dependencies {
     implementation(libs.parse.android) {
         exclude(group = "com.android.support")
     }
+    implementation(libs.glide)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)

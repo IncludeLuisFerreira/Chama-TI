@@ -127,6 +127,31 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return c;
     }
 
+    public Chamado getChamadoByParseObjectId(String parseObjectId) {
+        if (parseObjectId == null || parseObjectId.isEmpty()) return null;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_CHAMADOS, null, COLUMN_PARSE_OBJECT_ID + "=?",
+                new String[]{parseObjectId}, null, null, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            Chamado chamado = cursorToChamado(cursor);
+            cursor.close();
+            return chamado;
+        }
+        if (cursor != null) cursor.close();
+        return null;
+    }
+
+    public long upsertChamado(Chamado chamado) {
+        Chamado existente = getChamadoByParseObjectId(chamado.getParseObjectId());
+        if (existente != null) {
+            chamado.setId(existente.getId());
+            atualizarChamado(chamado);
+            return existente.getId();
+        } else {
+            return inserirChamado(chamado);
+        }
+    }
+
     public int getCountByStatus(String status) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_CHAMADOS + " WHERE " + COLUMN_STATUS + "=?", new String[]{status});

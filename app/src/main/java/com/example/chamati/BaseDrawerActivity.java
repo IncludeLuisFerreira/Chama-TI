@@ -38,7 +38,9 @@ public abstract class BaseDrawerActivity extends AppCompatActivity {
             int itemId = item.getItemId();
             Intent intent = null;
 
-            if (itemId == R.id.nav_novo_chamado) {
+            if (itemId == R.id.nav_home) {
+                intent = new Intent(this, MainActivity.class);
+            } else if (itemId == R.id.nav_novo_chamado) {
                 intent = new Intent(this, CadastroChamadoActivity.class);
             } else if (itemId == R.id.nav_listagem) {
                 intent = new Intent(this, ListaChamadoActivity.class);

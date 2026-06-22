@@ -1,6 +1,5 @@
 package com.example.chamati;
 
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -11,6 +10,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import com.bumptech.glide.Glide;
 import com.example.chamati.Cloud.ChamadoCloudManager;
 import com.example.chamati.DataBase.DataBaseHelper;
 import com.example.chamati.Model.Chamado;
@@ -109,8 +109,12 @@ public class AtendimentoActivity extends AppCompatActivity {
         tvAtendTitulo.setText(chamado.getTitulo());
 
         String imagemPath = chamado.getImagemPath();
-        if (imagemPath != null && !imagemPath.isEmpty() && new File(imagemPath).exists()) {
-            ivAtendimentoImagem.setImageBitmap(BitmapFactory.decodeFile(imagemPath));
+        if (imagemPath != null && !imagemPath.isEmpty()) {
+            if (new File(imagemPath).exists()) {
+                Glide.with(this).load(new File(imagemPath)).into(ivAtendimentoImagem);
+            } else {
+                Glide.with(this).load(imagemPath).into(ivAtendimentoImagem);
+            }
             ivAtendimentoImagem.setImageTintList(null);
         } else {
             ivAtendimentoImagem.setImageResource(android.R.drawable.ic_menu_gallery);

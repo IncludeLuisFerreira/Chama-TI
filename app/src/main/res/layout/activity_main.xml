@@ -19,7 +19,7 @@
         <ImageView
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:src="@drawable/ic_fire" />
+            android:src="@drawable/icon_app" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -47,6 +47,7 @@
         android:weightSum="3">
 
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardAbertos"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
@@ -78,6 +79,7 @@
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardAndamento"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
@@ -109,6 +111,7 @@
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardConcluidos"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"

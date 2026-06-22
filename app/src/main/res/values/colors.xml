@@ -19,4 +19,6 @@
 
     <color name="badge_infra_bg">#331A1A</color>
     <color name="badge_ti_bg">#0A2A2E</color>
+
+    <color name="ic_background">#0F1115</color>
 </resources>
